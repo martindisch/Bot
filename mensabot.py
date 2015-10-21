@@ -26,30 +26,32 @@ while True:
         get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update + 1)).content)
     for update in get_updates['result']:
         msg = update['message']['text']
-        out = "Got message: " + update['message']['text']
+        senderId = update['message']['from']['id']
+        senderName = update['message']['from']['first_name']
+        out = "Got message: " + update['message']['text'] + " from " + senderName
         reply = "null"
         if msg == "/newpoll":
             if pollCreator == "null":
-                pollCreator = update['message']['from']['id']
+                pollCreator = senderId
                 reply = "Who's also having lunch today?"
-                out = update['message']['from']['first_name'] + " started a poll"
+                out = senderName + " started a poll"
             else:
                 reply = "There's already a poll running"
-                out = update['message']['from']['first_name'] + " tried to start another poll"
+                out = senderName + " tried to start another poll"
         elif msg == "/me":
             if pollCreator != "null":
-                if update['message']['from']['id'] in participants_id:
-                    out = update['message']['from']['first_name'] + " tried to add themselves again"
+                if senderId in participants_id:
+                    out = senderName + " tried to add themselves again"
                 else:
-                    participants_id.append(update['message']['from']['id'])
-                    participants_name.append(update['message']['from']['first_name'])
-                    out = update['message']['from']['first_name'] + " joins for lunch"
+                    participants_id.append(senderId)
+                    participants_name.append(senderName)
+                    out = senderName + " joins for lunch"
                     reply = "Got it"
             else:
-                out = update['message']['from']['first_name'] + " tried to add themselves - no poll running"
+                out = senderName + " tried to add themselves - no poll running"
         elif msg == "/result":
             if pollCreator != "null":
-                if pollCreator == update['message']['from']['id']:
+                if pollCreator == senderId:
                     if len(participants_name) > 2:
                         test = 0
                     elif len(participants_name) == 2:
@@ -61,11 +63,12 @@ while True:
                     pollCreator = "null"
                     participants_id = []
                     participants_name = []
+                    out = reply
                 else:
-                    out = update['message']['from']['first_name'] + " tried to finish a poll they didn't start"
+                    out = senderName + " tried to finish a poll they didn't start"
                     reply = "Only the creator can finish a poll"
             else:
-                out = update['message']['from']['first_name'] + " tried to finish a poll - there is none running"
+                out = senderName + " tried to finish a poll - there is none running"
                 reply = "There is no poll running"
             print out
             last_update = update['update_id']
