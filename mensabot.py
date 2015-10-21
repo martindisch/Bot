@@ -46,13 +46,17 @@ while True:
                     out = senderName + " tried to start another poll"
             elif msg == "/me":
                 if pollCreator != "null":
-                    if senderId in participants_id:
-                        out = senderName + " tried to add themselves again"
+                    if pollCreator != senderId:
+                        if senderId in participants_id:
+                            out = senderName + " tried to add themselves again"
+                        else:
+                            participants_id.append(senderId)
+                            participants_name.append(senderName)
+                            out = senderName + " joins for lunch"
+                            reply = "Got it"
                     else:
-                        participants_id.append(senderId)
-                        participants_name.append(senderName)
-                        out = senderName + " joins for lunch"
-                        reply = "Got it"
+                        out = "The poll creator tried to add themselves"
+                        reply = "No need for that, you know you're coming"
                 else:
                     out = senderName + " tried to add themselves - no poll running"
             elif msg == "/result":
