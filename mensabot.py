@@ -23,7 +23,7 @@ while True:
     if (last_update == 0):
         get_updates = json.loads(requests.get(url + 'getUpdates').content)
     else:
-        get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update)).content)
+        get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update + 1)).content)
     for update in get_updates['result']:
         msg = update['message']['text']
         out = "Got message: " + update['message']['text']
