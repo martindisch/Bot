@@ -47,7 +47,7 @@ while True:
                     out = update['message']['from']['first_name'] + " tried to start another poll"
             elif msg == "/me":
                 if pollCreator != "null":
-                    if any(update['message']['from']['id'] in p for p in participants_id):
+                    if update['message']['from']['id'] in participants_id:
                         out = update['message']['from']['first_name'] + " tried to add themselves again"
                     else:
                         participants_id.append(update['message']['from']['id'])
