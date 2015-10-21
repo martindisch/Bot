@@ -30,7 +30,7 @@ participants_name = []
 
 while True:
     gotUpdate = False
-    get_updates = json.loads(requests.get(url + 'getUpdates').content)
+    get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update)).content)
     for update in get_updates['result']:
         if last_update < update['update_id']:
             gotUpdate = True
@@ -84,5 +84,4 @@ while True:
         f = open("offset", 'w')
         f.write(str(last_update))
         f.close
-        print "Stored new offset"
     sleep(3)
