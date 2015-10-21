@@ -63,7 +63,7 @@ while True:
                     pollCreator = "null"
                     participants_id = []
                     participants_name = []
-                    out = reply
+                    out = senderName + " finished poll. Result:\n\n" + reply + "\n"
                 else:
                     out = senderName + " tried to finish a poll they didn't start"
                     reply = "Only the creator can finish a poll"
