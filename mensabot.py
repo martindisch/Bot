@@ -70,8 +70,8 @@ while True:
             else:
                 out = senderName + " tried to finish a poll - there is none running"
                 reply = "There is no poll running"
-            print out
-            last_update = update['update_id']
-            if reply != "null":
-                requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
+        print out
+        last_update = update['update_id']
+        if reply != "null":
+            requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
     sleep(3)
