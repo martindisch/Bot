@@ -35,6 +35,8 @@ while True:
         if last_update < update['update_id']:
             gotUpdate = True
             msg = update['message']['text']
+            out = "Got message: " + update['message']['text']
+            reply = "null"
             if msg == "/newpoll":
                 if pollCreator == "null":
                     pollCreator = update['message']['from']['id']
@@ -44,13 +46,16 @@ while True:
                     reply = "There's already a poll running"
                     out = update['message']['from']['first_name'] + " tried to start another poll"
             elif msg == "/me":
-                if any(update['message']['from']['id'] in p for p in participants_id):
-                    out = update['message']['from']['first_name'] + " tried to add themselves again"
+                if pollCreator != "null":
+                    if any(update['message']['from']['id'] in p for p in participants_id):
+                        out = update['message']['from']['first_name'] + " tried to add themselves again"
+                    else:
+                        participants_id.append(update['message']['from']['id'])
+                        participants_name.append(update['message']['from']['first_name'])
+                        out = update['message']['from']['first_name'] + " joins for lunch"
+                        reply = "Got it"
                 else:
-                    participants_id += update['message']['from']['id']
-                    participants_name += update['message']['from']['first_name']
-                    out = update['message']['from']['first_name'] + " joins for lunch"
-                    reply = "Got it"
+                    out = update['message']['from']['first_name'] + " tried to add themselves - no poll running"
             elif msg == "/result":
                 if pollCreator != "null":
                     if pollCreator == update['message']['from']['id']:
@@ -59,7 +64,7 @@ while True:
                         elif len(participants_name) == 2:
                             reply = participants_name[0] + " and " + participants_name[1] + " are joining you today.\n\nBe sure to save two more seats."
                         elif len(participants_name) == 1:
-                            reply = participants_name[0] + "is joining you today.\n\nBe sure to save one more seat."
+                            reply = participants_name[0] + " is joining you today.\n\nBe sure to save one more seat."
                         else:
                             reply = "Looks like nobody is coming today"
                         pollCreator = "null"
@@ -73,8 +78,8 @@ while True:
                     reply = "There is no poll running"
             print out
             last_update = update['update_id']
-            requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
-            print "Acknowledged"
+            if reply != "null":
+                requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
     if gotUpdate:
         f = open("offset", 'w')
         f.write(str(last_update))
