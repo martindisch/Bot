@@ -63,7 +63,11 @@ while True:
                 if pollCreator != "null":
                     if pollCreator == senderId:
                         if len(participants_name) > 2:
-                            test = 0
+                            reply = ""
+                            count = len(participants_name)
+                            for i in range(count - 2):
+                                reply += participants_name[i] + ",\n"
+                            reply += participants_name[count - 2] + " and " + participants_name[count - 1] + " are joining you today.\n\nBe sure to save " + count + " more seats."
                         elif len(participants_name) == 2:
                             reply = participants_name[0] + " and " + participants_name[1] + " are joining you today.\n\nBe sure to save two more seats."
                         elif len(participants_name) == 1:
