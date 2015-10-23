@@ -21,12 +21,23 @@ url = 'https://api.telegram.org/bot%s/' % token
 pollCreator = "null"
 participants_id = []
 participants_name = []
+hasConnection = True
 
 while True:
-    if (last_update == 0):
-        get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20)).content)
-    else:
-        get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20)).content)
+    try:
+        if (last_update == 0):
+            get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20), timeout=25).content)
+        else:
+            get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=25).content)
+        if not hasConnection:
+            print dateTime() + "    regained connection"
+            hasConnection = True
+    except:
+        if hasConnection:
+            print dateTime() + "    lost connection"
+            hasConnection = False
+        get_updates['result'] = []
+        sleep(25)
     for update in get_updates['result']:
         hasMsg = False
         try:
@@ -90,5 +101,4 @@ while True:
             print out
             last_update = update['update_id']
             if reply != "null":
-                requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
-    print dateTime()
+                requests.post(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
