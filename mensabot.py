@@ -1,8 +1,11 @@
 import requests
 import json
 import os
+import time
 from time import sleep
-from pprint import pprint
+
+def dateTime():
+    return time.strftime("%Y/%m/%d %H:%M:%S")
 
 # Read token from untracked credentials file.
 # We wouldn't want this on Github now, would we?
@@ -21,9 +24,9 @@ participants_name = []
 
 while True:
     if (last_update == 0):
-        get_updates = json.loads(requests.get(url + 'getUpdates').content)
+        get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20)).content)
     else:
-        get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(offset=last_update + 1)).content)
+        get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20)).content)
     for update in get_updates['result']:
         hasMsg = False
         try:
@@ -88,4 +91,4 @@ while True:
             last_update = update['update_id']
             if reply != "null":
                 requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
-    sleep(1)
+    print dateTime()
