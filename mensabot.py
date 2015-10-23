@@ -88,4 +88,4 @@ while True:
             last_update = update['update_id']
             if reply != "null":
                 requests.get(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
-    sleep(3)
+    sleep(1)
