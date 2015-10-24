@@ -26,9 +26,9 @@ hasConnection = True
 while True:
     try:
         if (last_update == 0):
-            get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20), timeout=25).content)
+            get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20), timeout=40).content)
         else:
-            get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=25).content)
+            get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=40).content)
         if not hasConnection:
             print dateTime() + "    regained connection"
             hasConnection = True
