@@ -30,11 +30,11 @@ while True:
         else:
             get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=40).content)
         if not hasConnection:
-            print dateTime() + "    regained connection"
+            #print dateTime() + "    regained connection"
             hasConnection = True
     except:
         if hasConnection:
-            print dateTime() + "    lost connection"
+            #print dateTime() + "    lost connection"
             hasConnection = False
         get_updates['result'] = []
         sleep(25)
