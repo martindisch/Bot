@@ -50,6 +50,7 @@ while True:
             senderName = update['message']['from']['first_name']
             out = "Got message: " + update['message']['text'] + " from " + senderName
             reply = "null"
+            msg = msg.replace("@unifr_mensabot", "")
             if msg == "/newpoll":
                 if pollCreator == "null":
                     pollCreator = senderId
