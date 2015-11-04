@@ -7,13 +7,14 @@ from time import sleep
 def dateTime():
     return time.strftime("%Y/%m/%d %H:%M:%S")
 
-# Read token from untracked credentials file.
+# Read token and owner id from untracked credentials file.
 # We wouldn't want this on Github now, would we?
 f = open("creds.txt")
 lines = f.readlines()
 f.close
 token = lines[0].strip()
-print "Token loaded"
+ownerId = lines[1].strip()
+print "Token and owner id loaded"
 
 last_update = 0
 url = 'https://api.telegram.org/bot%s/' % token
@@ -30,11 +31,11 @@ while True:
         else:
             get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=40).content)
         if not hasConnection:
-            #print dateTime() + "    regained connection"
+            print dateTime() + "    regained connection"
             hasConnection = True
     except:
         if hasConnection:
-            #print dateTime() + "    lost connection"
+            print dateTime() + "    lost connection"
             hasConnection = False
         get_updates['result'] = []
         sleep(25)
@@ -76,7 +77,7 @@ while True:
                     out = senderName + " tried to add themselves - no poll running"
             elif msg == "/result":
                 if pollCreator != "null":
-                    if pollCreator == senderId:
+                    if pollCreator == senderId or senderId == ownerId:
                         if len(participants_name) > 2:
                             reply = ""
                             count = len(participants_name)

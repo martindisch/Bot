@@ -58,6 +58,3 @@ target/
 
 # Credentials
 creds.txt
-
-# Offset storage
-offset
