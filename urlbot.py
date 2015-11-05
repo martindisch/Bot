@@ -12,7 +12,7 @@ for url in urlfile:
     if not 'http://' in url:
         url = 'http://' + url
     url = url.replace('\n', '')
-    filename = url.replace('/', '%2f')
+    filename = url.replace("https://", "").replace("http://", "").replace("/", "%2f")
     if not os.path.isfile(savepath + filename):
         urllib.urlretrieve(url, savepath + filename)
     filelines = open(savepath + filename, 'r').readlines()
