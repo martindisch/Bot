@@ -58,3 +58,6 @@ target/
 
 # Credentials
 creds.txt
+
+# URLs
+urldata/
