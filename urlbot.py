@@ -32,9 +32,9 @@ def getChanges():
                 urlstring += '"' + url + '" '
 
     if urlstring:
-        print "New data on " + urlstring
+        return "New data on " + urlstring
     else:
-        print "Nothing for today"
+        return "Nothing"
 
 
 def addUrl(url):
@@ -81,6 +81,8 @@ hasConnection = True
 savepath = 'urldata/'
 urlspath = savepath + 'urls.txt'
 commandState = "null"
+interval = 1
+counter = 0
 
 while True:
     try:
@@ -148,3 +150,12 @@ while True:
                     url + 'sendMessage',
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=reply))
+    counter += 20
+    if counter == interval * 60:
+        changes = getChanges
+        if changes != "Nothing":
+            requests.post(
+                    url + 'sendMessage',
+                    params=dict(chat_id=update['message']['chat']['id'],
+                                text=changes))
+        counter = 0
