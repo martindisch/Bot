@@ -4,6 +4,7 @@ import os
 import time
 from time import sleep
 
+
 def dateTime():
     return time.strftime("%Y/%m/%d %H:%M:%S")
 
@@ -27,9 +28,15 @@ hasConnection = True
 while True:
     try:
         if (last_update == 0):
-            get_updates = json.loads(requests.get(url + 'getUpdates', params=dict(timeout=20), timeout=40).content)
+            get_updates = json.loads(requests.post(url + 'getUpdates',
+                                                  params=dict(timeout=20),
+                                                  timeout=40).content)
         else:
-            get_updates = json.loads(requests.post(url + 'getUpdates', params=dict(offset=last_update + 1, timeout=20), timeout=40).content)
+            get_updates = json.loads(
+                requests.post(url + 'getUpdates',
+                              params=dict(offset=last_update + 1,
+                                          timeout=20),
+                              timeout=40).content)
         if not hasConnection:
             print dateTime() + "    regained connection"
             hasConnection = True
@@ -49,7 +56,8 @@ while True:
         if hasMsg:
             senderId = update['message']['from']['id']
             senderName = update['message']['from']['first_name']
-            out = "Got message: " + update['message']['text'] + " from " + senderName
+            out = "Got message: " + update['message']['text']
+            out += " from " + senderName
             reply = "null"
             msg = msg.replace("@unifr_mensabot", "")
             if msg == "/newpoll":
@@ -74,7 +82,8 @@ while True:
                         out = "The poll creator tried to add themselves"
                         reply = "No need for that, you know you're coming"
                 else:
-                    out = senderName + " tried to add themselves - no poll running"
+                    out = senderName + " tried to add themselves - "
+                    out += "no poll running"
             elif msg == "/result":
                 if pollCreator != "null":
                     if pollCreator == senderId or senderId == ownerId:
@@ -83,24 +92,39 @@ while True:
                             count = len(participants_name)
                             for i in range(count - 2):
                                 reply += participants_name[i] + ", "
-                            reply += participants_name[count - 2] + " and " + participants_name[count - 1] + " are joining you today.\n\nBe sure to save " + str(count) + " more seats."
+                            reply += participants_name[count - 2]
+                            reply += " and " + participants_name[count - 1]
+                            reply += " are joining you today.\n\n"
+                            reply += "Be sure to save " + str(count)
+                            reply += " more seats."
                         elif len(participants_name) == 2:
-                            reply = participants_name[0] + " and " + participants_name[1] + " are joining you today.\n\nBe sure to save two more seats."
+                            reply = participants_name[0] + " and "
+                            reply += participants_name[1]
+                            reply += " are joining you today.\n\n"
+                            reply += "Be sure to save two more seats."
                         elif len(participants_name) == 1:
-                            reply = participants_name[0] + " is joining you today.\n\nBe sure to save one more seat."
+                            reply = participants_name[0]
+                            reply += " is joining you today.\n\n"
+                            reply += "Be sure to save one more seat."
                         else:
                             reply = "Looks like nobody is coming today"
                         pollCreator = "null"
                         participants_id = []
                         participants_name = []
-                        out = senderName + " finished poll. Result:\n\n" + reply + "\n"
+                        out = senderName + " finished poll. Result:\n\n"
+                        out += reply + "\n"
                     else:
-                        out = senderName + " tried to finish a poll they didn't start"
+                        out = senderName
+                        out += " tried to finish a poll they didn't start"
                         reply = "Only the creator can finish a poll"
                 else:
-                    out = senderName + " tried to finish a poll - there is none running"
+                    out = senderName
+                    out += " tried to finish a poll - there is none running"
                     reply = "There is no poll running"
             print out
             last_update = update['update_id']
             if reply != "null":
-                requests.post(url + 'sendMessage', params=dict(chat_id=update['message']['chat']['id'], text=reply))
+                requests.post(
+                    url + 'sendMessage',
+                    params=dict(chat_id=update['message']['chat']['id'],
+                                text=reply))
