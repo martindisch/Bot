@@ -10,11 +10,6 @@ def dateTime():
     return time.strftime("%Y/%m/%d %H:%M:%S")
 
 def getChanges():
-    errormsg = '%s: No such file or directory'
-    for path in savepath, urlspath:
-        if not os.path.exists(path):
-            print errormsg % path
-            sys.exit(0)
     urlfile = pickle.load(open(urlspath, 'rb'))
     urlstring = ''
     for url in urlfile:
@@ -87,6 +82,9 @@ f.close
 token = lines[0].strip()
 ownerId = lines[1].strip()
 print "Token and owner id loaded"
+
+if not os.path.exists(savepath):
+    os.makedirs(savepath)
 
 last_update = 0
 url = 'https://api.telegram.org/bot%s/' % token
