@@ -39,13 +39,19 @@ def getChanges():
 
 def addUrl(url):
     open(urlspath, 'a').write(url + "\n")
+    return "Watching the given URL"
 
 
 def listUrls():
     filelines = open(urlspath, 'r').readlines()
+    out = ""
     for idx, val in enumerate(filelines):
         if not val == "":
-            print "[" + str(idx) + "] " + val.rstrip("\n")
+            out += "[" + str(idx) + "] " + val.rstrip("\n")
+    if out != "":
+        return out
+    else:
+        return "Not watching any URLs"
 
 
 def removeUrl(index):
@@ -53,8 +59,9 @@ def removeUrl(index):
     if len(filelines) > index:
         del filelines[index]
         open(urlspath, 'w').writelines(filelines)
+        return "URL removed from watchlist"
     else:
-        print "Item does not exist"
+        return "Item does not exist"
 
 
 # Read token and owner id from untracked credentials file.
@@ -73,6 +80,7 @@ hasConnection = True
 
 savepath = 'urldata/'
 urlspath = savepath + 'urls.txt'
+commandState = "null"
 
 while True:
     try:
@@ -110,11 +118,28 @@ while True:
             reply = "null"
             msg = msg.replace(bot_name, "")
             
-            if msg == "/add":
-                
-            elif msg == "/list":
-                
-            elif msg == "/remove":
+            if senderId == ownerId:
+                if msg == "/add":
+                    reply = "Send me the URL you want to watch"
+                    commandState = "add"
+                    out = senderName + " wants to add a URL"
+                elif msg == "/list":
+                    reply = listUrls()
+                    out = senderName + " lists the URLs"
+                elif msg == "/remove":
+                    reply = "Send me the index of the URL you want to unwatch"
+                    commandState = "remove"
+                    out = senderName + " wants to remove a URL"
+                elif commandState == "add":
+                    reply = addUrl(msg)
+                    commandState == "null"
+                    out = senderName + " added " + msg
+                elif commandState == "remove":
+                    reply = removeUrl(int(msg))
+                    commandState == "null"
+                    out = senderName + " removed URL [" + msg + "]"
+            else:
+                reply = "You are not authorized to use this service"
                 
             print out
             last_update = update['update_id']
