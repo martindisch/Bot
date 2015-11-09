@@ -148,11 +148,11 @@ while True:
                     out = senderName + " wants to remove a URL"
                 elif commandState == "add":
                     reply = addUrl(msg)
-                    commandState == "null"
+                    commandState = "null"
                     out = senderName + " added " + msg
                 elif commandState == "remove":
                     reply = removeUrl(int(msg))
-                    commandState == "null"
+                    commandState = "null"
                     out = senderName + " removed URL [" + msg + "]"
             else:
                 reply = "You are not authorized to use this service"
