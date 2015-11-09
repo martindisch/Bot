@@ -10,7 +10,10 @@ def dateTime():
     return time.strftime("%Y/%m/%d %H:%M:%S")
 
 def getChanges():
-    urlfile = pickle.load(open(urlspath, 'rb'))
+    try:
+        urlfile = pickle.load(open(urlspath, 'rb'))
+    except (OSError, IOError) as e:
+        urlfile = []
     urlstring = ''
     for url in urlfile:
         if not 'http://' in url:
@@ -38,18 +41,16 @@ def addUrl(url):
         urls = pickle.load(open(urlspath, 'rb'))
         urls.append(url)
     except (OSError, IOError) as e:
-        print "URLs file does not exist"
         urls.append(url)
     pickle.dump(urls, open(urlspath, 'wb'))
     return "Watching the given URL"
 
 
 def listUrls():
-    filelines = []
     try:
         filelines = pickle.load(open(urlspath, 'rb'))
     except (OSError, IOError) as e:
-        print "URLs file does not exist"
+        filelines = []
     out = ""
     if len(filelines) > 0:
         for idx, val in enumerate(filelines):
