@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import time
+import pickle
 from time import sleep
 
 def dateTime():
@@ -14,22 +15,21 @@ def getChanges():
         if not os.path.exists(path):
             print errormsg % path
             sys.exit(0)
-    urlfile = open(urlspath, 'r').readlines()
+    urlfile = pickle.load(open(urlspath, 'rb'))
     urlstring = ''
     for url in urlfile:
-        if not url == "":
-            if not 'http://' in url:
-                url = 'http://' + url
-            url = url.replace('\n', '')
-            filename = url.replace("https://", "").replace(
-                "http://", "").replace("/", "%2f")
-            if not os.path.isfile(savepath + filename):
-                urllib.urlretrieve(url, savepath + filename)
-            filelines = open(savepath + filename, 'r').readlines()
-            urllines = urllib.urlopen(url).readlines()
-            if not filelines == urllines:
-                open(savepath + filename, 'w').writelines(urllines)
-                urlstring += '"' + url + '" '
+        if not 'http://' in url:
+            url = 'http://' + url
+        url = url.replace('\n', '')
+        filename = url.replace("https://", "").replace(
+            "http://", "").replace("/", "%2f")
+        if not os.path.isfile(savepath + filename):
+            urllib.urlretrieve(url, savepath + filename)
+        filelines = open(savepath + filename, 'r').readlines()
+        urllines = urllib.urlopen(url).readlines()
+        if not filelines == urllines:
+            open(savepath + filename, 'w').writelines(urllines)
+            urlstring += '"' + url + '" '
 
     if urlstring:
         return "New data on " + urlstring
@@ -38,30 +38,45 @@ def getChanges():
 
 
 def addUrl(url):
-    open(urlspath, 'a').write(url + "\n")
+    urls = []
+    try:
+        urls = pickle.load(open(urlspath, 'rb'))
+        urls.append(url)
+    except (OSError, IOError) as e:
+        print "URLs file does not exist"
+        urls.append(url)
+    pickle.dump(urls, open(urlspath, 'wb'))
     return "Watching the given URL"
 
 
 def listUrls():
-    filelines = open(urlspath, 'r').readlines()
+    filelines = []
+    try:
+        filelines = pickle.load(open(urlspath, 'rb'))
+    except (OSError, IOError) as e:
+        print "URLs file does not exist"
     out = ""
-    for idx, val in enumerate(filelines):
-        if not val == "":
+    if len(filelines) > 0:
+        for idx, val in enumerate(filelines):
             out += "[" + str(idx) + "] " + val.rstrip("\n")
-    if out != "":
         return out
     else:
         return "Not watching any URLs"
 
 
 def removeUrl(index):
-    filelines = open(urlspath, 'r').readlines()
-    if len(filelines) > index:
-        del filelines[index]
-        open(urlspath, 'w').writelines(filelines)
-        return "URL removed from watchlist"
-    else:
-        return "Item does not exist"
+    filelines = []
+    try:
+        filelines = pickle.load(open(urlspath, 'rb'))
+        if len(filelines) > index:
+            del filelines[index]
+            pickle.dump(filelines, open(urlspath, 'wb'))
+            return "URL removed from watchlist"
+        else:
+            return "Item does not exist"
+    except (OSError, IOError) as e:
+        print "URLs file does not exist"
+        return "Not watching any URLs"
 
 
 # Read token and owner id from untracked credentials file.
@@ -79,7 +94,7 @@ bot_name = "@unifr_mensabot"
 hasConnection = True
 
 savepath = 'urldata/'
-urlspath = savepath + 'urls.txt'
+urlspath = savepath + 'urls'
 commandState = "null"
 interval = 1
 counter = 0
@@ -152,7 +167,7 @@ while True:
                                 text=reply))
     counter += 20
     if counter == interval * 60:
-        changes = getChanges
+        changes = getChanges()
         if changes != "Nothing":
             requests.post(
                     url + 'sendMessage',
