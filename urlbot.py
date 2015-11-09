@@ -37,3 +37,11 @@ def listUrls():
     for idx, val in enumerate(filelines):
         if not val == "":
             print "[" + str(idx) + "] " + val.rstrip("\n")
+            
+def removeUrl(index):
+    filelines = open(urlspath, 'r').readlines()
+    if len(filelines) > index:
+        del filelines[index]
+        open(urlspath, 'w').writelines(filelines)
+    else:
+        print "Item does not exist"
