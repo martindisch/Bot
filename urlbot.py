@@ -118,7 +118,7 @@ while True:
             reply = "null"
             msg = msg.replace(bot_name, "")
             
-            if senderId == ownerId:
+            if senderId == int(ownerId):
                 if msg == "/add":
                     reply = "Send me the URL you want to watch"
                     commandState = "add"

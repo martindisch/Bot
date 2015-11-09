@@ -87,7 +87,7 @@ while True:
                     out += "no poll running"
             elif msg == "/result":
                 if pollCreator != "null":
-                    if pollCreator == senderId or senderId == ownerId:
+                    if pollCreator == senderId or senderId == int(ownerId):
                         if len(participants_name) > 2:
                             reply = ""
                             count = len(participants_name)
