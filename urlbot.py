@@ -31,3 +31,9 @@ def getChanges():
         
 def addUrl(url):
     open(urlspath, 'a').write(url + "\n")
+    
+def listUrls():
+    filelines = open(urlspath, 'r').readlines()
+    for idx, val in enumerate(filelines):
+        if not val == "":
+            print "[" + str(idx) + "] " + val.rstrip("\n")
