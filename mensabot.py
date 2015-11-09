@@ -19,6 +19,7 @@ print "Token and owner id loaded"
 
 last_update = 0
 url = 'https://api.telegram.org/bot%s/' % token
+bot_name = "@unifr_mensabot"
 
 pollCreator = "null"
 participants_id = []
@@ -59,7 +60,7 @@ while True:
             out = "Got message: " + update['message']['text']
             out += " from " + senderName
             reply = "null"
-            msg = msg.replace("@unifr_mensabot", "")
+            msg = msg.replace(bot_name, "")
             if msg == "/newpoll":
                 if pollCreator == "null":
                     pollCreator = senderId
