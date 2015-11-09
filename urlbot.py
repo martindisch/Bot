@@ -54,7 +54,7 @@ def listUrls():
     out = ""
     if len(filelines) > 0:
         for idx, val in enumerate(filelines):
-            out += "[" + str(idx) + "] " + val.rstrip("\n")
+            out += "[" + str(idx) + "] " + val + "\n"
         return out
     else:
         return "Not watching any URLs"
