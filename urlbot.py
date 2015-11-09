@@ -83,9 +83,6 @@ token = lines[0].strip()
 ownerId = lines[1].strip()
 print "Token and owner id loaded"
 
-if not os.path.exists(savepath):
-    os.makedirs(savepath)
-
 last_update = 0
 url = 'https://api.telegram.org/bot%s/' % token
 bot_name = "@unifr_mensabot"
@@ -96,6 +93,9 @@ urlspath = savepath + 'urls'
 commandState = "null"
 interval = 1
 counter = 0
+
+if not os.path.exists(savepath):
+    os.makedirs(savepath)
 
 while True:
     try:
