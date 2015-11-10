@@ -7,7 +7,7 @@ import pickle
 from time import sleep
 
 def dateTime():
-    return time.strftime("%Y/%m/%d %H:%M:%S")
+    return time.strftime("%Y/%m/%d %H:%M:%S") + "   "
 
 def getChanges():
     try:
@@ -71,7 +71,6 @@ def removeUrl(index):
         else:
             return "Item does not exist"
     except (OSError, IOError) as e:
-        print "URLs file does not exist"
         return "Not watching any URLs"
 
 
@@ -111,11 +110,11 @@ while True:
                                           timeout=20),
                               timeout=40).content)
         if not hasConnection:
-            print dateTime() + "    regained connection"
+            print dateTime() + "regained connection"
             hasConnection = True
     except:
         if hasConnection:
-            print dateTime() + "    lost connection"
+            print dateTime() + "lost connection"
             hasConnection = False
         get_updates['result'] = []
         sleep(25)
@@ -157,7 +156,7 @@ while True:
             else:
                 reply = "You are not authorized to use this service"
                 
-            print out
+            print dateTime + out
             last_update = update['update_id']
             if reply != "null":
                 requests.post(
@@ -171,4 +170,5 @@ while True:
                     url + 'sendMessage',
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=changes))
+            print dateTime() + "Notified " + senderName + " of changes"
         timestamp = time.time()
