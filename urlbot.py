@@ -93,7 +93,7 @@ savepath = 'urldata/'
 urlspath = savepath + 'urls'
 commandState = "null"
 interval = 1
-counter = 0
+timestamp = time.time()
 
 if not os.path.exists(savepath):
     os.makedirs(savepath)
@@ -164,12 +164,11 @@ while True:
                     url + 'sendMessage',
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=reply))
-    counter += 20
-    if counter == interval * 60:
+    if time.time() - timestamp > interval * 60:
         changes = getChanges()
         if changes != "Nothing":
             requests.post(
                     url + 'sendMessage',
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=changes))
-        counter = 0
+        timestamp = time.time()
