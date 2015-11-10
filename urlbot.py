@@ -21,16 +21,19 @@ def getChanges():
         url = url.replace('\n', '')
         filename = url.replace("https://", "").replace(
             "http://", "").replace("/", "%2f")
-        if not os.path.isfile(savepath + filename):
-            urllib.urlretrieve(url, savepath + filename)
-        filelines = open(savepath + filename, 'r').readlines()
-        urllines = urllib.urlopen(url).readlines()
-        if not filelines == urllines:
-            open(savepath + filename, 'w').writelines(urllines)
-            urlstring += '"' + url + '" '
+        try:
+            if not os.path.isfile(savepath + filename):
+                urllib.urlretrieve(url, savepath + filename)
+            filelines = open(savepath + filename, 'r').readlines()
+            urllines = urllib.urlopen(url).readlines()
+            if not filelines == urllines:
+                open(savepath + filename, 'w').writelines(urllines)
+                urlstring += "Updated: " + url + "\n"
+        except:
+            urlstring += "Down: " + url + "\n"
 
     if urlstring:
-        return "New data on " + urlstring
+        return urlstring
     else:
         return "Nothing"
 
