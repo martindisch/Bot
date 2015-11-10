@@ -113,11 +113,11 @@ while True:
                                           timeout=20),
                               timeout=40).content)
         if not hasConnection:
-            print str(dateTime()) + "regained connection"
+            print dateTime() + "regained connection"
             hasConnection = True
     except:
         if hasConnection:
-            print str(dateTime()) + "lost connection"
+            print dateTime() + "lost connection"
             hasConnection = False
         get_updates['result'] = []
         sleep(25)
@@ -159,7 +159,7 @@ while True:
             else:
                 reply = "You are not authorized to use this service"
                 
-            print str(dateTime) + out
+            print dateTime() + out
             last_update = update['update_id']
             if reply != "null":
                 requests.post(
@@ -173,5 +173,5 @@ while True:
                     url + 'sendMessage',
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=changes))
-            print str(dateTime()) + "Notified " + senderName + " of changes"
+            print dateTime() + "Notified " + senderName + " of changes"
         timestamp = time.time()
