@@ -94,7 +94,7 @@ hasConnection = True
 savepath = 'urldata/'
 urlspath = savepath + 'urls'
 commandState = "null"
-interval = 1
+interval = 5
 timestamp = time.time()
 
 if not os.path.exists(savepath):
