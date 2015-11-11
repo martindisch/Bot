@@ -172,7 +172,6 @@ while True:
             if changes != "Nothing":
                 requests.post(
                         url + 'sendMessage',
-                        params=dict(chat_id=update['message']['chat']['id'],
-                                    text=changes))
+                        params=dict(chat_id=ownerId, text=changes))
                 print dateTime() + "Notified " + senderName + " of changes"
         timestamp = time.time()
