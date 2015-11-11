@@ -167,11 +167,12 @@ while True:
                     params=dict(chat_id=update['message']['chat']['id'],
                                 text=reply))
     if time.time() - timestamp > interval * 60:
-        changes = getChanges()
-        if changes != "Nothing":
-            requests.post(
-                    url + 'sendMessage',
-                    params=dict(chat_id=update['message']['chat']['id'],
-                                text=changes))
-            print dateTime() + "Notified " + senderName + " of changes"
+        if hasConnection:
+            changes = getChanges()
+            if changes != "Nothing":
+                requests.post(
+                        url + 'sendMessage',
+                        params=dict(chat_id=update['message']['chat']['id'],
+                                    text=changes))
+                print dateTime() + "Notified " + senderName + " of changes"
         timestamp = time.time()
