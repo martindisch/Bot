@@ -173,5 +173,9 @@ while True:
                 requests.post(
                         url + 'sendMessage',
                         params=dict(chat_id=ownerId, text=changes))
+                try:
+                    senderName
+                except NameError:
+                    senderName=ownerId
                 print dateTime() + "Notified " + senderName + " of changes"
         timestamp = time.time()
