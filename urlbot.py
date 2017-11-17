@@ -16,8 +16,6 @@ def getChanges():
         urlfile = []
     urlstring = ''
     for url in urlfile:
-        if not 'http://' in url or 'https://' in url:
-            url = 'http://' + url
         url = url.replace('\n', '')
         filename = url.replace("https://", "").replace(
             "http://", "").replace("/", "%2f")
