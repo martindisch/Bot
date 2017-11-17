@@ -16,7 +16,7 @@ def getChanges():
         urlfile = []
     urlstring = ''
     for url in urlfile:
-        if not 'http://' in url:
+        if not 'http://' in url or 'https://' in url:
             url = 'http://' + url
         url = url.replace('\n', '')
         filename = url.replace("https://", "").replace(
@@ -135,7 +135,7 @@ while True:
             out += " from " + senderName
             reply = "null"
             msg = msg.replace(bot_name, "")
-            
+
             if senderId == int(ownerId):
                 if msg == "/add":
                     reply = "Send me the URL you want to watch"
@@ -158,7 +158,7 @@ while True:
                     out = senderName + " removed URL [" + msg + "]"
             else:
                 reply = "You are not authorized to use this service"
-                
+
             print dateTime() + out
             last_update = update['update_id']
             if reply != "null":
